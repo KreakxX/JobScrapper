@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: Scrapper-Service
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/Scrapper_DB
+    username: root
+    password: 1234
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+      dialect: org.hibernate.dialect.MySQL8Dialect

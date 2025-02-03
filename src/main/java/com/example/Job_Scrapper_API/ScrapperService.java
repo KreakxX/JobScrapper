@@ -216,17 +216,16 @@ public class ScrapperService {
         options.addArguments("--disable-component-update");
         options.addArguments("--enable-default-apps");
         options.addArguments("--enable-extensions");
-        options.addArguments("--headless");
 
         System.setProperty("webdriver.chrome.driver", "C:\\Users\\Henri\\Videos\\Java\\chromedriver.exe");
         WebDriver driver = new ChromeDriver(options);
         String url = "https://www.arbeitsagentur.de/jobsuche/suche?angebotsart=1&was="+JobTitle+"&wo="+Ort+"&umkreis=25";
         driver.get(url);
-        Thread.sleep(2000);
+        Thread.sleep(1000);
         JavascriptExecutor js = (JavascriptExecutor) driver;
         js.executeScript("document.cookie = 'cookie_consent=accepted; path=/;';");
         driver.navigate().refresh();
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(6));
         try {
             WebElement cookieButton = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("button[data-testid='bahf-cookie-disclaimer-btn-alle']")));
             cookieButton.click();
@@ -314,17 +313,19 @@ public class ScrapperService {
         options.addArguments("--disable-component-update");
         options.addArguments("--enable-default-apps");
         options.addArguments("--enable-extensions");
+        options.addArguments("--headless");
 
         System.setProperty("webdriver.chrome.driver", "C:\\Users\\Henri\\Videos\\Java\\chromedriver.exe");
         WebDriver driver = new ChromeDriver(options);
         driver.get(URL);
         Thread.sleep(1000);
         JavascriptExecutor js = (JavascriptExecutor) driver;
-        js.executeScript("document.cookie = 'SEARCH_QUERY_COUNT={\"08e0b0da1e91145c884f8544e5700bd7\":3}; path=/;';");
-        js.executeScript("document.cookie = 'uc_user_interaction=true; path=/;';");
-        js.executeScript("document.cookie = 'uc_ui_version=3.59.1; path=/;';");
-        js.executeScript("document.cookie = 'uc_settings={\"controllerId\":\"1bef0918490e08b163868d79eb79562c1478fe70f38447321c32718872bcc9ae\",\"id\":\"Tr_3B1GDkkB1q2\",\"language\":\"de\"}; path=/;';");
-        js.executeScript("document.cookie = 'uc_tcf={\"acString\":\"\",\"tcString\":\"\",\"timestamp\":1738090227442}; path=/;';");
+        js.executeScript("localStorage.setItem('SEARCH_QUERY_COUNT', '{\"08e0b0da1e91145c884f8544e5700bd7\":3}');");
+        js.executeScript("localStorage.setItem('uc_user_interaction', 'true');");
+        js.executeScript("localStorage.setItem('uc_ui_version', '3.59.1');");
+        js.executeScript("localStorage.setItem('uc_settings', '{\"controllerId\":\"1bef0918490e08b163868d79eb79562c1478fe70f38447321c32718872bcc9ae\",\"id\":\"Tr_3B1GDkkB1q2\",\"language\":\"de\"}');");
+        js.executeScript("localStorage.setItem('uc_tcf', '{\"acString\":\"\",\"tcString\":\"\",\"timestamp\":1738090227442}');");
+        driver.navigate().refresh();
 
         try {
             WebDriverWait wait1 = new WebDriverWait(driver, Duration.ofSeconds(5));
@@ -357,7 +358,7 @@ public class ScrapperService {
                 String Company = driver.findElement(By.cssSelector("p.body-copy-styles__BodyCopy-sc-b3916c1b-0.bvzYHx.job-teaser-list-item-styles__Company-sc-54c129d4-6.jOpLYv")).getText();
 
                 js.executeScript("window.open(arguments[0]);", jobUrl);
-                Thread.sleep(2000);
+                Thread.sleep(1000);
 
                 for (String windowHandle : driver.getWindowHandles()) {
                     if (!windowHandle.equals(mainWindowHandle)) {
@@ -393,7 +394,7 @@ public class ScrapperService {
 
                 driver.close();
                 driver.switchTo().window(mainWindowHandle);
-                Thread.sleep(2000);
+                Thread.sleep(1000);
             }
 
             if (processedJobUrls.size() % size == 0) {
@@ -413,11 +414,9 @@ public class ScrapperService {
                         System.out.println("Schließt nicht");
                         e.printStackTrace();
                     }
-                    Thread.sleep(1000);
                     WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(4));
                     WebElement button = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//button[@data-xds='Button']//span[text()='Mehr anzeigen']")));
                     ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", button);
-                    Thread.sleep(1000);
                     button.click();
                     Thread.sleep(1000);
                 } catch (Exception e) {

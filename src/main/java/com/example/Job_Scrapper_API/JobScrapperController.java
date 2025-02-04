@@ -52,4 +52,14 @@ public class JobScrapperController {
     public List<JobOffer> getJobsFromPlattform(@PathVariable String plattform){
         return service.getJobsFromSpecificPlattForm(plattform);
     }
+
+    @GetMapping("/sort/JobOffers/based/on/maxed/Salary")
+    public List<JobOffer> SortJobOffersBasedOnSalary(){
+        return service.SortJobsBasedOnHighestSalary();
+    }
+
+    @GetMapping("/sort/JobOffers/based/on/lowest/Salary")
+    public List<JobOffer> SortJobsOffersBasedOnLowestSalary(){
+        return service.SortJobsBasedOnLowestSalary();
+    }
 }

@@ -216,6 +216,7 @@ public class ScrapperService {
         options.addArguments("--disable-component-update");
         options.addArguments("--enable-default-apps");
         options.addArguments("--enable-extensions");
+        options.addArguments("--headless");
 
         System.setProperty("webdriver.chrome.driver", "C:\\Users\\Henri\\Videos\\Java\\chromedriver.exe");
         WebDriver driver = new ChromeDriver(options);
@@ -477,6 +478,59 @@ public class ScrapperService {
             }
         }
         return jobsFromSpecificPlattform;
+    }
+
+    public List<JobOffer> SortJobsBasedOnHighestSalary() {
+        List<JobOffer> all = repository.findAll();
+        Collections.sort(all, new Comparator<JobOffer>() {
+
+            public int compare(JobOffer j1, JobOffer j2) {
+                try {
+                    double maxSalaryJ1 = parseSalary(j1.getGehalt());
+                    double maxSalaryJ2 = parseSalary(j2.getGehalt());
+                    return Double.compare(maxSalaryJ2, maxSalaryJ1);
+                } catch (Exception e) {
+                    return 0;
+                }
+            }
+            private double parseSalary(String gehalt) {
+                if (gehalt.equals("Kein Gehalt gefunden")) {
+                    return 0.0;
+                }
+                String[] parts = gehalt.split("-");
+                String maxSalaryStr = parts[1].trim().split(" ")[0];
+                maxSalaryStr = maxSalaryStr.replace(".", "");
+                return Double.parseDouble(maxSalaryStr);
+            }
+        });
+
+        return all;
+    }
+
+    public List<JobOffer> SortJobsBasedOnLowestSalary(){
+        List<JobOffer> all = repository.findAll();
+        Collections.sort(all, new Comparator<JobOffer>() {
+            @Override
+            public int compare(JobOffer o1, JobOffer o2) {
+                try{
+                    double maxSalaryJ1 = parseSalary(o1.getGehalt());
+                    double maxSalaryJ2 = parseSalary(o2.getGehalt());
+                    return Double.compare(maxSalaryJ1, maxSalaryJ2);
+                }catch(Exception e){
+                    return 0;
+                }
+            }
+            private double parseSalary(String gehalt) {
+                if (gehalt.equals("Kein Gehalt gefunden")) {
+                    return Double.MAX_VALUE;
+                }
+                String[] parts = gehalt.split("-");
+                String maxSalaryStr = parts[1].trim().split(" ")[0];
+                maxSalaryStr = maxSalaryStr.replace(".", "");
+                return Double.parseDouble(maxSalaryStr);
+            }
+        });
+        return all;
     }
 
 

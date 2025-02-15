@@ -62,4 +62,14 @@ public class JobScrapperController {
     public List<JobOffer> SortJobsOffersBasedOnLowestSalary(){
         return service.SortJobsBasedOnLowestSalary();
     }
+
+    @GetMapping("/search/by/keyword/{Keyword}")
+    public List<JobOffer> loadJoboffersBasedOnKeyWord(@PathVariable String Keyword){
+        return service.searchJobOffersByKeyWord(Keyword);
+    }
+
+    @GetMapping("/get/average/Salary/from/Job/{Title}")
+    public String getAverageSalaryfromJob(@PathVariable String Title){
+        return service.getAverageSalaryFromNiche(Title);
+    }
 }

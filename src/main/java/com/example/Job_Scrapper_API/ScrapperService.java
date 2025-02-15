@@ -29,7 +29,6 @@ public class ScrapperService {
         options.addArguments("--disable-component-update");
         options.addArguments("--enable-default-apps");
         options.addArguments("--enable-extensions");
-        options.addArguments("--headless");
         List<JobOffer> jobOffers = new ArrayList<>();
         System.setProperty("webdriver.chrome.driver", "C:\\Users\\Henri\\Videos\\Java\\chromedriver.exe");
         WebDriver driver = new ChromeDriver(options);
@@ -67,7 +66,10 @@ public class ScrapperService {
         for(int i = 0;i <maxPage;i++){
             String url2 = "https://www.stepstone.de/jobs/"+JobTitle+"/in-"+Ort+"?radius=30&page="+i;
             driver.get(url2);
-            List<WebElement> ListedJobs  =driver.findElements(By.cssSelector(".res-1p8f8en"));
+            List<WebElement> ListedJobs  =driver.findElements(By.cssSelector(".res-sfoyn7"));
+            if(ListedJobs.isEmpty()){
+                System.out.println("Empty");
+            }
             WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(4));
             try {
                 WebElement cookieBanner2 = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("ccmgt_explicit_accept")));
@@ -145,6 +147,7 @@ public class ScrapperService {
             }
         }
         repository.saveAll(jobOffers);
+        driver.quit();
     }
 
 
@@ -204,6 +207,7 @@ public class ScrapperService {
             jobOffers.add(offer);
         }
         repository.saveAll(jobOffers);
+        driver.quit();
 
     }
 
@@ -216,15 +220,15 @@ public class ScrapperService {
         options.addArguments("--disable-component-update");
         options.addArguments("--enable-default-apps");
         options.addArguments("--enable-extensions");
-        options.addArguments("--headless");
 
         System.setProperty("webdriver.chrome.driver", "C:\\Users\\Henri\\Videos\\Java\\chromedriver.exe");
         WebDriver driver = new ChromeDriver(options);
         String url = "https://www.arbeitsagentur.de/jobsuche/suche?angebotsart=1&was="+JobTitle+"&wo="+Ort+"&umkreis=25";
         driver.get(url);
-        Thread.sleep(1000);
+        Thread.sleep(2000);
         JavascriptExecutor js = (JavascriptExecutor) driver;
         js.executeScript("document.cookie = 'cookie_consent=accepted; path=/;';");
+        Thread.sleep(1000);
         driver.navigate().refresh();
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(6));
         try {
@@ -236,7 +240,7 @@ public class ScrapperService {
         } catch (TimeoutException e) {
             System.out.println("Cookie banner not found, proceeding...");
         }
-        List<WebElement> processedJobs = new ArrayList<>(); // Liste der bereits verarbeiteten Jobs
+        List<WebElement> processedJobs = new ArrayList<>();
             int count = 1;
             boolean moreJobsAvailable = true;
             while (moreJobsAvailable) {
@@ -291,14 +295,15 @@ public class ScrapperService {
 
                     wait1.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("button[_ngcontent-ng-c3721204639]")));
                     erweiternButton.click();
+                    count++;
                     Thread.sleep(2000);
                 } catch (Exception e) {
                     System.out.println("Kein weiterer Erweitern-Button gefunden. Ende der Seiten.");
                     moreJobsAvailable = false;
                 }
         }
-        System.out.println("DONE");
         repository.saveAll(jobOffers);
+        driver.quit();
     }
 
 
@@ -314,7 +319,6 @@ public class ScrapperService {
         options.addArguments("--disable-component-update");
         options.addArguments("--enable-default-apps");
         options.addArguments("--enable-extensions");
-        options.addArguments("--headless");
 
         System.setProperty("webdriver.chrome.driver", "C:\\Users\\Henri\\Videos\\Java\\chromedriver.exe");
         WebDriver driver = new ChromeDriver(options);
@@ -378,9 +382,14 @@ public class ScrapperService {
                 } catch (Exception e) {
                     System.out.println("vielleicht später not found");
                 }
+                String description = "";
+                try{
+                    WebElement element = webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("div[data-testid='expandable-content']")));
+                     description = driver.findElement(By.cssSelector("div[data-testid='expandable-content']")).getText();
+                }catch(Exception e){
+                    description = "No description found";
+                }
 
-                WebElement element = webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("div[data-testid='expandable-content']")));
-                String description = driver.findElement(By.cssSelector("div[data-testid='expandable-content']")).getText();
                 JobOffer offer = JobOffer.builder()
                         .Ort(Ort)
                         .JobTitle(Jobtitle)
@@ -397,8 +406,9 @@ public class ScrapperService {
                 driver.switchTo().window(mainWindowHandle);
                 Thread.sleep(1000);
             }
-
-            if (processedJobUrls.size() % size == 0) {
+            System.out.println(processedJobUrls.size() +" vor Modulo");
+            System.out.println(size + "nach Modulo");
+            if (processedJobUrls.size() % size == 0 || processedJobUrls.size() % size - 1 == 0 || processedJobUrls.size() % size - 2 == 0 || processedJobUrls.size() % size - 3 == 0 || processedJobUrls.size() %  size-4 == 0 || processedJobUrls.size() % size-5 == 0) {
                 System.out.println("CLICKED");
                 ((JavascriptExecutor) driver).executeScript("window.scrollTo(0, document.body.scrollHeight);");
                 try {
@@ -432,6 +442,7 @@ public class ScrapperService {
 
         }
         repository.saveAll(jobOffers);
+        driver.quit();
     }
 
 
@@ -532,6 +543,37 @@ public class ScrapperService {
         });
         return all;
     }
+
+    public List<JobOffer> searchJobOffersByKeyWord(String KeyWord){
+        List<JobOffer> all = repository.findAll();
+        List<JobOffer> MatchingJobOffers = new ArrayList<>();
+        for(JobOffer offer : all){
+            if(offer.getDescription().contains(KeyWord) || offer.getJobTitle().contains(KeyWord) || offer.getCompany().contains(KeyWord)){
+                MatchingJobOffers.add(offer);
+            }
+        }
+        return MatchingJobOffers;
+    }
+
+
+    public String getAverageSalaryFromNiche(String JobTitle){
+        String URL = "https://www.jobvector.de/gehalt/"+ JobTitle+"/";
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--disable-blink-features=AutomationControlled");
+        options.addArguments("--disable-popup-blocking");
+        options.addArguments("--disable-component-update");
+        options.addArguments("--enable-default-apps");
+        options.addArguments("--enable-extensions");
+
+        System.setProperty("webdriver.chrome.driver", "C:\\Users\\Henri\\Videos\\Java\\chromedriver.exe");
+        WebDriver driver = new ChromeDriver(options);
+        driver.get(URL);
+
+        String Gehalt = driver.findElement(By.cssSelector(".avg")).getText();
+        driver.quit();
+        return Gehalt;
+    }
+
 
 
 

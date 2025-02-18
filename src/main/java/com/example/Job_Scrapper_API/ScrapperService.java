@@ -626,7 +626,7 @@ public class ScrapperService {
         prompt.append(" bitte formuliere eine Seriöse und gut ausformulierte Bewerbung für einen Job, bitte nur eine Bewerbung die ich Sofort Kopieren kann ");
 
         String API_URL_TEMPLATE = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=%s";
-        String geminiKey = "AIzaSyCss0WR313MCitJtOSvGEfjctzvDik56-A";
+        String geminiKey = "your API Key";
         String API_URL = String.format(API_URL_TEMPLATE, geminiKey);
         ObjectMapper mapper = new ObjectMapper();
         String promptReal = prompt.toString();

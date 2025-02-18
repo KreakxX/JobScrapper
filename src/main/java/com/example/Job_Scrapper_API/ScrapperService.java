@@ -1,13 +1,20 @@
 package com.example.Job_Scrapper_API;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
 import java.time.Duration;
 import java.util.*;
 import java.util.NoSuchElementException;
@@ -17,12 +24,15 @@ import java.util.NoSuchElementException;
 public class ScrapperService {
 
     private final JobScrapperRepository repository;
+    private final RestTemplate restTemplate;
 
 
-
-
-    public void scrappeJobOffersFromStepstone(String JobTitle, String Ort) throws InterruptedException {
-        repository.deleteAll();
+    public void scrappeJobOffersFromStepstone(String JobTitle, String Ort) {
+        for (JobOffer offer : repository.findAll()) {
+            if (offer.getType().equals("Stepstone")) {
+                repository.delete(offer);
+            }
+        }
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--disable-blink-features=AutomationControlled");
         options.addArguments("--disable-popup-blocking");
@@ -32,17 +42,18 @@ public class ScrapperService {
         List<JobOffer> jobOffers = new ArrayList<>();
         System.setProperty("webdriver.chrome.driver", "C:\\Users\\Henri\\Videos\\Java\\chromedriver.exe");
         WebDriver driver = new ChromeDriver(options);
-        String url1 = "https://www.stepstone.de/jobs/"+JobTitle+"/in-"+Ort+"?radius=30&page="+0;
+        String url1 = "https://www.stepstone.de/jobs/" + JobTitle + "/in-" + Ort + "?radius=30&page=" + 0;
         driver.get(url1);
         String MaxPage = driver.findElement(By.cssSelector("[aria-label*='von ']"))
                 .getAttribute("aria-label")
-                .split("von ")[1];        System.out.println(MaxPage);
+                .split("von ")[1];
+        System.out.println(MaxPage);
         int maxPage = Integer.parseInt(MaxPage);
         WebDriverWait wait2 = new WebDriverWait(driver, Duration.ofSeconds(10));
         WebElement cookieBanner = wait2.until(ExpectedConditions.visibilityOfElementLocated(By.id("ccmgt_explicit_accept")));
         cookieBanner.click();
 
-        String loginUrl =  driver.findElement(By.cssSelector(".hf-provider-1chzj96")).getAttribute("href");
+        String loginUrl = driver.findElement(By.cssSelector(".hf-provider-1chzj96")).getAttribute("href");
         System.out.println(loginUrl);
         driver.get("https://www.stepstone.de/de-DE/candidate/login?login_source=Resultlist_top-login&intcid=Button_Resultlist-navigation_login&gfp=1");
         try {
@@ -63,11 +74,11 @@ public class ScrapperService {
         }
         driver.get(url1);
         driver.navigate().refresh();
-        for(int i = 0;i <maxPage;i++){
-            String url2 = "https://www.stepstone.de/jobs/"+JobTitle+"/in-"+Ort+"?radius=30&page="+i;
+        for (int i = 0; i < maxPage; i++) {
+            String url2 = "https://www.stepstone.de/jobs/" + JobTitle + "/in-" + Ort + "?radius=30&page=" + i;
             driver.get(url2);
-            List<WebElement> ListedJobs  =driver.findElements(By.cssSelector(".res-sfoyn7"));
-            if(ListedJobs.isEmpty()){
+            List<WebElement> ListedJobs = driver.findElements(By.cssSelector(".res-sfoyn7"));
+            if (ListedJobs.isEmpty()) {
                 System.out.println("Empty");
             }
             WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(4));
@@ -77,11 +88,11 @@ public class ScrapperService {
             } catch (TimeoutException e) {
                 System.out.println("Cookie-Banner nicht gefunden, fahre fort.");
             }
-            for(WebElement job : ListedJobs){
+            for (WebElement job : ListedJobs) {
                 String Jobtitle = job.findElement(By.cssSelector(".res-nehv70")).getText();
                 String Company = job.findElement(By.cssSelector(".res-1c5ai0d")).getText();
                 String HomeOffice = job.findElement(By.cssSelector(".res-lgmafx")).getText();
-                if(HomeOffice.contains("€")){
+                if (HomeOffice.contains("€")) {
                     HomeOffice = "Not Specified";
                 }
                 List<WebElement> elements = job.findElements(By.cssSelector("span[data-genesis-element='TEXT']"));
@@ -121,7 +132,7 @@ public class ScrapperService {
                 } catch (NoSuchElementException e) {
                     System.out.println("Expand button not found or not interactable. Skipping...");
                 }
-                if(HomeOffice.equals("Gehalt anzeigen")){
+                if (HomeOffice.equals("Gehalt anzeigen")) {
                     HomeOffice = "Not specified";
                 }
             /*
@@ -155,10 +166,10 @@ public class ScrapperService {
 
         List<JobOffer> jobOffers = new ArrayList<>();
         ChromeOptions options = new ChromeOptions();
-        options.addArguments("--disable-blink-features=AutomationControlled"); // Avoid navigator.webdriver detection
-        options.addArguments("--disable-popup-blocking"); // Avoid popup crashing
-        options.addArguments("--disable-component-update"); // Avoid detection as Stealth Driver
-        options.addArguments("--enable-default-apps"); // Enable default apps
+        options.addArguments("--disable-blink-features=AutomationControlled");
+        options.addArguments("--disable-popup-blocking");
+        options.addArguments("--disable-component-update");
+        options.addArguments("--enable-default-apps");
         options.addArguments("--enable-extensions");
         options.addArguments("--disable-gpu");
         options.addArguments("--no-sandbox");
@@ -208,11 +219,15 @@ public class ScrapperService {
         }
         repository.saveAll(jobOffers);
         driver.quit();
-
     }
 
+
     public void scrapeJobsFromAgenturFürArbeit(String JobTitle, String Ort) throws InterruptedException {
-        System.out.println("GOT CALLED");
+        for(JobOffer offer : repository.findAll()){
+            if(offer.getType().equals("Agentur Für Arbeit")){
+                repository.delete(offer);
+            }
+        }
         List<JobOffer> jobOffers = new ArrayList<>();
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--disable-blink-features=AutomationControlled");
@@ -309,6 +324,11 @@ public class ScrapperService {
 
 
     public void scrapeJobsFromXing(String JobTitle, String Ort) throws InterruptedException {
+        for(JobOffer offer : repository.findAll()){
+            if(offer.getType().equals("Xing")){
+                repository.delete(offer);
+            }
+        }
         String URL = "https://www.xing.com/jobs/search?sc_o=jobs_search_button&sc_o_PropActionOrigin=losp_job_search&keywords="
                 + JobTitle + "&location=" + Ort + "&id=538d6613c4a7c2b11d55ffa95306f949";
 
@@ -360,8 +380,8 @@ public class ScrapperService {
                 ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", job);
                 String Jobtitle = job.findElement(By.cssSelector("[data-testid='job-teaser-list-title']")).getText();
                 System.out.println(Jobtitle);
+                String Gehalt = "Kein Gehalt gefunden";
                 String Company = driver.findElement(By.cssSelector("p.body-copy-styles__BodyCopy-sc-b3916c1b-0.bvzYHx.job-teaser-list-item-styles__Company-sc-54c129d4-6.jOpLYv")).getText();
-
                 js.executeScript("window.open(arguments[0]);", jobUrl);
                 Thread.sleep(1000);
 
@@ -382,6 +402,13 @@ public class ScrapperService {
                 } catch (Exception e) {
                     System.out.println("vielleicht später not found");
                 }
+                try{
+                    Gehalt = driver.findElement(By.cssSelector("li[data-testid='job-fact-salary']")).getText();
+                    System.out.println(Gehalt);
+                }catch(Exception e){
+                    e.printStackTrace();
+                    System.out.println("No Gehalt gefunden");
+                }
                 String description = "";
                 try{
                     WebElement element = webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("div[data-testid='expandable-content']")));
@@ -397,7 +424,7 @@ public class ScrapperService {
                         .HomeOffice("Not specified")
                         .Company(Company)
                         .url(jobUrl)
-                        .gehalt("Kein Gehalt gefunden")
+                        .gehalt(Gehalt)
                         .Description(description)
                         .build();
                 jobOffers.add(offer);
@@ -408,8 +435,15 @@ public class ScrapperService {
             }
             System.out.println(processedJobUrls.size() +" vor Modulo");
             System.out.println(size + "nach Modulo");
-            if (processedJobUrls.size() % size == 0 || processedJobUrls.size() % size - 1 == 0 || processedJobUrls.size() % size - 2 == 0 || processedJobUrls.size() % size - 3 == 0 || processedJobUrls.size() %  size-4 == 0 || processedJobUrls.size() % size-5 == 0) {
-                System.out.println("CLICKED");
+            if (processedJobUrls.size() % size == 0 ||
+                    (processedJobUrls.size() % size) == 1 ||
+                    (processedJobUrls.size() % size) == 2 ||
+                    (processedJobUrls.size() % size) == 3 ||
+                    (processedJobUrls.size() % size) == 4 ||
+                    (processedJobUrls.size() % size) == 5 ||
+            (size % processedJobUrls.size() == 0) || (size % processedJobUrls.size()) == 1 || (size % processedJobUrls.size()) == 2 )
+                    {
+
                 ((JavascriptExecutor) driver).executeScript("window.scrollTo(0, document.body.scrollHeight);");
                 try {
                     try {
@@ -572,6 +606,40 @@ public class ScrapperService {
         String Gehalt = driver.findElement(By.cssSelector(".avg")).getText();
         driver.quit();
         return Gehalt;
+    }
+
+    public String writeApplicationWithHelpOfKi(BewerbungsInfos infos) throws JsonProcessingException {
+
+        StringBuilder prompt = new StringBuilder();
+        prompt.append("Hallo Gemini ich möchte das du mir eine Bewerbung Schreibst für ein Unternehmen für ein Job, mein Name ist");
+        prompt.append(infos.name).append(" ,");
+        prompt.append(" das Unternehmen lässt sich mit folgenden Wörtern beschreiben: ");
+        for(String keyWordCompany : infos.KeyWordsCompany){
+            prompt.append(keyWordCompany).append(", ");
+        }
+        prompt.append(" es heißt: ");
+        prompt.append(infos.CompanyName).append(" und ist in folgender Branche tätig: ");
+        prompt.append(infos.Branche).append(" Ich beschreibe mich wie folgt: ");
+        for(String keyWordMe: infos.KeyWordsMe){
+            prompt.append(keyWordMe).append(", ");
+        }
+        prompt.append(" bitte formuliere eine Seriöse und gut ausformulierte Bewerbung für einen Job, bitte nur eine Bewerbung die ich Sofort Kopieren kann ");
+
+        String API_URL_TEMPLATE = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=%s";
+        String geminiKey = "AIzaSyCss0WR313MCitJtOSvGEfjctzvDik56-A";
+        String API_URL = String.format(API_URL_TEMPLATE, geminiKey);
+        ObjectMapper mapper = new ObjectMapper();
+        String promptReal = prompt.toString();
+        String requestBody = mapper.writeValueAsString(
+                mapper.createObjectNode().set("contents",
+                        mapper.createArrayNode().add(mapper.createObjectNode().set("parts",
+                                mapper.createArrayNode().add(mapper.createObjectNode().put("text", promptReal))))));
+        HttpEntity<String> request = new HttpEntity<>(requestBody);
+        ResponseEntity<String> response = restTemplate.exchange(API_URL, HttpMethod.POST, request, String.class);
+        JsonNode node = mapper.readTree(response.getBody());
+        String answer = node.path("candidates").get(0).path("content").path("parts").get(0).path("text").asText();
+        String modifiedAnswer = answer.replaceAll("\\*", "");
+        return modifiedAnswer;
     }
 
 

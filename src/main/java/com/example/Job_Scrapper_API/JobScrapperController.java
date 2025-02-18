@@ -1,8 +1,10 @@
 package com.example.Job_Scrapper_API;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -12,6 +14,8 @@ import java.util.List;
 public class JobScrapperController {
 
     private final ScrapperService service;
+    private final LebenslaufService service2;
+
 
     @GetMapping("/scrape/Jobs/from/Stepstone/{Jobtitle}/{Ort}")
     public void  scrapeJobsFromStepstone(@PathVariable String Jobtitle, @PathVariable String Ort) throws InterruptedException {
@@ -71,5 +75,15 @@ public class JobScrapperController {
     @GetMapping("/get/average/Salary/from/Job/{Title}")
     public String getAverageSalaryfromJob(@PathVariable String Title){
         return service.getAverageSalaryFromNiche(Title);
+    }
+
+    @PostMapping("/generate/perfect/lebenslauf/{Path}")
+    public void generatePerfectLebenslauf(@PathVariable String Path, @RequestBody Lebenslauf lebenslauf) throws IOException {
+        service2.generatePerfectLebenslauf(lebenslauf,Path);
+    }
+
+    @PostMapping("/write/Bewerbung")
+    public String writePerfectBewerbungWithHelpOfKi(@RequestBody BewerbungsInfos infos) throws JsonProcessingException {
+        return service.writeApplicationWithHelpOfKi(infos);
     }
 }

@@ -1,0 +1,871 @@
+/* Base styling */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Arial", sans-serif;
+}
+
+body {
+  background-color: #09090b;
+  margin: 0;
+  overflow-y: auto; /* Ensure scrolling on the body */
+}
+
+.App {
+  text-align: center;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.headline {
+  margin: 0;
+  font-size: 2.5rem;
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  width: 100%;
+  height: 90px;
+  padding-top: 20px;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+/* Container for Register Component */
+.login-container {
+  position: relative;
+  bottom: 50px;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.register-container {
+  position: relative;
+  bottom: 80px;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+/* Title for the Register Component */
+.register-container h2,
+.login-container h2 {
+  position: relative;
+  font-size: 40px;
+  color: white;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Form specific for the Register component */
+.register-form,
+.login-form {
+  background-color: #2e3b4e;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  text-align: left;
+}
+
+/* Form Elements */
+.register-form input,
+.login-form input,
+.login-form2 input {
+  width: 100%;
+  height: 60px;
+  padding: 12px 15px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  background-color: #f4f4f4;
+  font-size: 16px;
+  color: #333;
+}
+
+.register-form button,
+.login-form button,
+.login-form2 button {
+  width: 100%;
+  height: 60px;
+  padding: 12px;
+  background-color: #0077b6;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+.Google-Button {
+  margin-top: 60px;
+  background-color: white !important;
+  color: black !important;
+}
+.google-icon {
+  width: 37px;
+  height: 37px;
+  position: relative;
+  right: 170px;
+}
+.Github-Button {
+  margin-top: 10px;
+  background-color: rgb(0, 0, 0) !important;
+  color: rgb(255, 255, 255) !important;
+}
+.Github-icon {
+  width: 61px;
+  height: 57px;
+  position: relative;
+  right: 170px;
+  bottom: 10px;
+}
+.Github-text {
+  color: white !important;
+  font-size: 18px !important;
+  position: relative;
+  bottom: 52px;
+}
+.google-text {
+  color: black !important;
+  font-size: 18px !important;
+  position: relative;
+  bottom: 32px;
+}
+.register-form .login {
+  margin-top: 20px;
+}
+
+.login-form .register {
+  margin-top: 20px;
+}
+
+.register-form button:hover,
+.login-form button:hover,
+.login-form2 button:hover {
+  background-color: #005f87;
+}
+
+/* Error/Success Messages */
+.success-message {
+  color: #4caf50;
+  font-size: 14px;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.error-message {
+  color: #f44336;
+  font-size: 14px;
+  text-align: center;
+  margin-top: 10px;
+}
+/* Product Container */
+.product-container {
+  position: relative;
+  top: 80px;
+  max-width: 1530px;
+  left: 50px;
+  margin: 20px auto;
+  padding: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 20px;
+  min-height: 100vh;
+}
+
+.Payment-Error {
+  color: red;
+  position: relative;
+  top: 213px;
+  left: 15px;
+  font-size: 18px;
+}
+/* Product Card */
+.product-card {
+  background-color: #fff;
+  border: 1px solid #e1e1e1;
+  border-radius: 8px;
+  padding: 20px; /* Keep padding the same */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+  height: 600px; /* Increased height for better visibility */
+  width: 350px;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+}
+
+.product-card h2 {
+  margin-top: 20px;
+  font-size: 1.5rem; /* Keep font size the same */
+  color: #333;
+}
+.product-description {
+  display: -webkit-box;
+  line-clamp: 2;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  height: auto;
+}
+
+.product-card p {
+  margin-top: 15px;
+  font-size: 1rem; /* Keep font size the same */
+  color: #666;
+}
+
+/* Image Styling */
+.product-card img {
+  width: 100%; /* Make the image fill the width of the card */
+  height: 400px; /* Maintain aspect ratio */
+  max-height: 315px; /* Increased maximum height for better visibility */
+  object-fit: cover; /* Ensure the image covers the area without stretching */
+  border-radius: 8px; /* Optional: Round the corners of the image */
+}
+.logout-button {
+  position: fixed;
+  bottom: 863.5px;
+  right: 60px;
+  width: 30px;
+  height: 90px;
+  color: white;
+  z-index: 10000;
+}
+.profile-button {
+  position: fixed;
+  bottom: 863.5px;
+  right: 10px;
+  width: 27px;
+  height: 90px;
+  color: white;
+  z-index: 10000;
+}
+.order-button {
+  position: fixed;
+  bottom: 863.5px;
+  right: 180px;
+  width: 30px;
+  height: 90px;
+  color: white;
+  z-index: 10000;
+}
+.cart-button {
+  position: fixed;
+  bottom: 863.5px;
+  right: 120px;
+  width: 30px;
+  height: 90px;
+  color: white;
+  z-index: 10000;
+}
+
+.Ai-button {
+  position: fixed;
+  height: 50px;
+  border: none;
+  width: 50px;
+  z-index: 1000;
+  bottom: 20px;
+  right: 20px;
+  border-radius: 15px;
+}
+.Ai-button:hover {
+  cursor: pointer;
+  background-color: #8b8b8b;
+}
+.Ai-button .Ai-Icon {
+  font-size: 40px;
+  color: #00457c;
+}
+.ChatContainer {
+  position: fixed;
+  background-color: rgba(46, 59, 78, 0.8); /* Halbtransparent */
+  backdrop-filter: blur(10px); /* Unschärfe */
+  z-index: 1000;
+  border-radius: 20px;
+  top: 90px;
+  width: 600px;
+  height: 780px;
+  right: 0px;
+}
+.Ask-Ai {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 50px;
+  height: 40px;
+  border-radius: 13px;
+  border: none;
+}
+.MessagesContainer {
+  position: relative;
+  top: 10px;
+  flex-grow: 1;
+  overflow-y: auto; /* Allows vertical scrolling */
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 700px; /* Define a max height */
+}
+
+.message {
+  max-width: 80%;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.user-message {
+  align-self: flex-end;
+  background-color: #d1e7dd;
+}
+
+.ai-message {
+  align-self: flex-start;
+  position: relative;
+  left: 10px;
+  background-color: #f8d7da;
+}
+.Ask-Ai-icon {
+  font-size: 15px;
+}
+.Ask-Ai:hover {
+  cursor: pointer;
+  background-color: #8b8b8b;
+}
+.TextInput {
+  position: fixed;
+  bottom: 20px;
+  width: 500px;
+  height: 40px;
+  padding-left: 20px;
+  border-radius: 10px;
+  border: none;
+  right: 80px;
+  font-size: 18px;
+}
+
+.cancel-order-button {
+  position: relative;
+  top: 50px;
+  width: 200px;
+  height: 40px;
+  border: none;
+  border-radius: 17px;
+  background-color: #005f87;
+  color: white;
+  font-size: 16px;
+  transition: 0.3s ease;
+}
+.cancel-order-button:hover {
+  background-color: #00457c;
+}
+.order-button:hover {
+  color: #0077b6;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+.logout-button:hover {
+  color: #0077b6;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.profile-button:hover {
+  color: #0077b6;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.cart-button:hover {
+  color: #0077b6;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+.order-container {
+  position: relative;
+  top: 80px;
+  max-width: 1530px;
+  left: 30px;
+  margin: 20px auto;
+  padding: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 20px;
+  min-height: 100vh;
+}
+.order-card {
+  background-color: #fff;
+  border: 1px solid #e1e1e1;
+  border-radius: 8px;
+  padding: 20px; /* Keep padding the same */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+  height: 600px; /* Increased height for better visibility */
+  width: 350px;
+}
+
+.order-card:hover {
+  transform: translateY(-5px);
+}
+
+.order-card h2 {
+  margin-top: 20px;
+  font-size: 1.5rem; /* Keep font size the same */
+  color: #333;
+}
+.order-description {
+  display: -webkit-box;
+  line-clamp: 2;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  height: auto;
+}
+.order-card .Price {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.order-card p {
+  margin-top: 15px;
+  font-size: 1rem; /* Keep font size the same */
+  color: #666;
+}
+.OrderMessage {
+  color: red;
+  font-size: 18px;
+  position: fixed;
+  top: 730px;
+  right: 750px;
+}
+
+/* Image Styling */
+.order-card img {
+  width: 100%; /* Make the image fill the width of the card */
+  height: 400px; /* Maintain aspect ratio */
+  max-height: 315px; /* Increased maximum height for better visibility */
+  object-fit: cover; /* Ensure the image covers the area without stretching */
+  border-radius: 8px; /* Optional: Round the corners of the image */
+}
+.individual-container {
+  max-width: 1500px;
+  display: flex;
+  justify-content: space-between;
+  margin: 40px auto;
+  padding: 20px;
+}
+
+.individual-container .individual-image {
+  width: 700px;
+  height: 700px;
+  border-radius: 20px;
+}
+
+.individual-container .individual-description {
+  position: relative;
+  max-width: 600px;
+  top: 150px;
+  left: 100px;
+  height: 350px;
+  padding: 30px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.individual-container .individual-button {
+  margin-top: 20px;
+  height: 60px;
+  width: 100%;
+  border-radius: 20px;
+  color: white;
+  background-color: #0077b6;
+  border: none;
+  font-size: 20px;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.individual-container .individual-button:hover {
+  background-color: #005f87;
+  cursor: pointer;
+}
+
+.individual-container .individual-description h2 {
+  font-size: 36px;
+  color: #343a40;
+  margin: 0;
+}
+
+.individual-container .individual-description p {
+  font-size: 18px;
+  margin-top: 10px;
+  color: #495057;
+}
+.individual-container .individual-description .Price-product {
+  font-size: 25px;
+  font-weight: bold;
+}
+.FilterButton {
+  background-color: transparent;
+  border: none;
+  left: 85px;
+  top: 95px;
+  position: fixed;
+  z-index: 1000;
+  cursor: pointer;
+}
+
+.filter-icon {
+  font-size: 2.5rem;
+  color: white;
+}
+
+.IncreaseAmount {
+  position: relative;
+  font-size: 20px;
+  top: 10px;
+  right: 20px;
+  width: 20px;
+  height: 20px;
+  transition: ease 0.1s;
+  border: none;
+  background: none;
+}
+.IncreaseAmount:hover {
+  color: #005f87;
+  transform: scale(1.2);
+  cursor: pointer;
+}
+
+.DecreaseAmount {
+  position: relative;
+  font-size: 20px;
+  top: 10px;
+  left: 20px;
+  width: 20px;
+  height: 20px;
+  border: none;
+  background: none;
+}
+.DecreaseAmount:hover {
+  color: #005f87;
+  transform: scale(1.2);
+  cursor: pointer;
+}
+.Empty {
+  position: relative;
+  bottom: 430px;
+  left: 700px;
+  width: 600px;
+  font-size: 60px;
+  color: white;
+}
+.Cart-container {
+  position: relative;
+  top: 100px;
+  right: 245px;
+  max-width: 1330px;
+  margin: 20px auto;
+  padding: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 25px;
+  min-height: 100vh;
+}
+.Cart-card {
+  background-color: #fff;
+  border: 1px solid #e1e1e1;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+  height: 570px;
+  width: 350px;
+}
+.Cart-card h2 {
+  margin-top: 10px;
+}
+.Cart-card p {
+  margin-top: 10px;
+}
+.Cart-card img {
+  width: 100%;
+  height: 400px;
+  max-height: 315px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+.Cart-card .amount {
+  font-weight: bold;
+}
+.Cart-card .price {
+  font-weight: bold;
+}
+.Paypal-button {
+  position: fixed;
+  left: 1400px;
+  height: 70px;
+  width: 350px;
+  bottom: 250px;
+  border-radius: 30px;
+  border: none;
+  background-color: #00457c; /* PayPal blue */
+  color: #ffffff; /* White text */
+  transition: background-color 0.2s ease;
+}
+
+.Paypal-button img {
+  height: 180px;
+  position: relative;
+  bottom: 55px;
+}
+
+.Paypal-button:hover {
+  cursor: pointer;
+  background-color: #003366; /* Darker PayPal blue */
+}
+
+.Stripe-button {
+  position: fixed;
+  left: 1400px;
+  height: 70px;
+  width: 350px;
+  bottom: 350px;
+  border-radius: 30px;
+  border: none;
+  background-color: #424770; /* Darker blue-gray */
+  color: #ffffff; /* White text */
+  transition: background-color 0.2s ease;
+}
+
+.Stripe-button img {
+  height: 100px;
+  position: relative;
+  bottom: 15px;
+}
+
+.Stripe-button:hover {
+  cursor: pointer;
+  background-color: #363e61; /* Darker shade for hover */
+}
+
+.Forgot-password {
+  margin-top: 20px;
+}
+
+.user-profile {
+  width: 500px;
+  margin: 0 auto;
+  position: relative;
+  bottom: 200px;
+  left: 30px;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+}
+
+.profile-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.profile-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.profile-section {
+  margin-bottom: 15px;
+}
+
+.profile-label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.profile-input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  color: #333;
+  background-color: #f9f9f9;
+}
+
+.profile-input:read-only {
+  background-color: #e9ecef; /* Change the background color for read-only input */
+  color: #6c757d; /* Change the text color for read-only input */
+}
+
+.profile-container-cart {
+  width: 500px;
+  margin: 0 auto;
+  position: fixed;
+  bottom: 210px;
+  right: 90px;
+  height: 520px;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+}
+
+.profile-header-cart {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.profile-title-cart {
+  font-size: 24px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.profile-section-cart {
+  margin-bottom: 15px;
+}
+
+.profile-label-cart {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.profile-input-cart {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  color: #333;
+  background-color: #f9f9f9;
+}
+
+.profile-input:read-only {
+  background-color: #e9ecef; /* Change the background color for read-only input */
+  color: #6c757d; /* Change the text color for read-only input */
+}
+
+.buy-now-button {
+  position: relative;
+  top: 25px;
+  width: 200px;
+  height: 40px;
+  transition: 0.3s ease;
+  background-color: #005f87;
+  border: none;
+  color: white;
+  font-size: 15px;
+  border-radius: 15px;
+  transition: 0.3s ease;
+}
+.buy-now-button:hover {
+  background-color: #00457c;
+  cursor: pointer;
+}
+
+.Visual-Cart-items {
+  font-size: 25px;
+  position: fixed;
+  bottom: 910px;
+  left: 1786px;
+  color: #feffff;
+  z-index: 1200;
+}
+.Visual-Orders {
+  font-size: 25px;
+  position: fixed;
+  bottom: 910px;
+  left: 1724px;
+  color: #feffff;
+  z-index: 1200;
+}
+.Search-Button {
+  position: fixed;
+  width: 20px;
+  height: 20px;
+  top: 40px;
+  left: 220px;
+  color: white;
+  z-index: 1200;
+}
+.Search-Bar input {
+  position: fixed;
+  top: 30px;
+  left: 10px;
+  width: 200px;
+  height: 40px;
+  border-radius: 15px;
+  border: none;
+  z-index: 12220;
+  padding-left: 10px;
+}
+
+.Filter-Container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Abstand zwischen den Buttons */
+  position: fixed;
+  left: 55px;
+  top: 125px;
+}
+
+.Filter-Container input {
+  top: 350px;
+  position: fixed;
+  left: 10px;
+  width: 200px;
+  height: 40px;
+  border-radius: 8px;
+  border: none;
+}
+
+.SaveButton {
+  width: 200px;
+  height: 40px;
+  padding: 12px;
+  background-color: #0077b6;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .product-container {
+    grid-template-columns: repeat(
+      2,
+      1fr
+    ); /* 2 cards per row on smaller screens */
+  }
+}
+
+@media (max-width: 480px) {
+  .product-container {
+    grid-template-columns: 1fr; /* 1 card per row on mobile screens */
+  }
+}

@@ -62,9 +62,9 @@ public class ScrapperService {
             e.printStackTrace();
         }
         WebElement EmailInput = driver.findElement(By.cssSelector(".gp-1n5gqlu"));
-        EmailInput.sendKeys("Henrik.standke@web.de");
+        EmailInput.sendKeys("TEST");
         WebElement PassWordInput = driver.findElement(By.cssSelector(".gp-1v58bed"));
-        PassWordInput.sendKeys("Henrik2008");
+        PassWordInput.sendKeys("TEST");
         WebElement loginButton = driver.findElement(By.cssSelector(".gp-1c37dok"));
         loginButton.click();
         try {
